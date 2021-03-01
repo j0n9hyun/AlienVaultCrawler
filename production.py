@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from modules import *
 
-AuditLog.audit_log_start()
-Service.EnableService()
+# AuditLog.audit_log_start()
+# Service.EnableService()
 for idx, i in enumerate(tqdm((GetApi.dbs), ncols=100), 1):
     tid_index = idx
     print('idx: %s' % tid_index)

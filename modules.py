@@ -15,7 +15,7 @@ DateFormat = '%Y-%m-%d %H:%M:%S'
 class GetApi:
     otx = OTXv2(
         'd208825926256517b037657addb90894cf4b663c8ba9651a67d44493334a94a4')
-    dbs = otx.getall(limit=1, max_page=3)
+    dbs = otx.getall(limit=1, max_page=1)
 
 
 class ConnectionDB:
