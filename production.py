@@ -3,13 +3,18 @@ from modules import *
 
 AuditLog.audit_log_start()
 Service.EnableService()
-for i in tqdm((GetApi.dbs), ncols=100):
+for idx, i in enumerate(tqdm((GetApi.dbs), ncols=100), 1):
+    tid_index = idx
+    print('idx: %s' % tid_index)
     cprint('\nid: %s' % i['id'], 'red')
     cprint('\nName: %s' % i['name'], 'green')
     cprint('Desc: %s' % i['description'], 'yellow')
     cprint('Revision: %s' % i['revision'], 'cyan')
     cprint('Tags: %s\033[0m' % i['tags'], 'blue')
     cprint('-' * 100, 'magenta')
+    ConnectionDB.cur.execute("INSERT INTO reputation_info (id, tid, title, description) values (default, %s, %s, %s)", (i['id'], i['name'], i['description']))
+    ConnectionDB.conn.commit()
+
     for idx, j in enumerate(i['indicators'], 1):
         try:
             if (IndicatorService.reputation_indicator(j['type'])):
@@ -31,8 +36,8 @@ for i in tqdm((GetApi.dbs), ncols=100):
         cprint('=' * 100, 'cyan')
         # time.sleep(0.5)
         ConnectionDB.cur.execute(
-            "INSERT INTO reputation_data (id, tid, title, description, service, indicator_type, indicator, reg_date, cre_date) values (default, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (i['id'], i['name'], i['description'], Service.ServiceIdx('AlienVault'),
+            "INSERT INTO reputation_data (id, info, service, indicator_type, indicator, reg_date, cre_date) values (default, %s, %s, %s, %s, %s, %s)",
+            (tid_index, Service.ServiceIdx('AlienVault'),
              IndicatorService.idx_exists(
                  j['type']), j['indicator'], Date, j['created']))
         ConnectionDB.conn.commit()
