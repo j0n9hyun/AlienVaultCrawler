@@ -58,32 +58,7 @@ create table if not exists reputation_info (
   description TEXT NOT NULL);
 
 
-
 ===========
-
-
-
-CREATE TABLE IF NOT EXISTS reputation_data (
-  id SERIAL NOT NULL,
-  tid TEXT NOT NULL,
-  title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  service INTEGER NOT NULL,
-  indicator_type INTEGER NOT NULL,
-  indicator TEXT NOT NULL,
-  reg_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  cre_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  CONSTRAINT reputation_data_fk1 FOREIGN KEY (service)
-    REFERENCES reputation_service (id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT reputation_data_fk2 FOREIGN KEY (indicator_type)
-    REFERENCES reputation_indicator (id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  PRIMARY KEY (id)
-);
-
-===
-
 
 CREATE TABLE IF NOT EXISTS reputation_data (
   id SERIAL NOT NULL,
@@ -107,20 +82,3 @@ CREATE TABLE IF NOT EXISTS reputation_data (
 
 
 ------------------------
-
-
-CREATE TABLE IF NOT EXISTS reputation_data (
-  id SERIAL NOT NULL,
-  service INTEGER NOT NULL,
-  indicator_type INTEGER NOT NULL,
-  indicator TEXT NOT NULL,
-  reg_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  cre_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  CONSTRAINT reputation_data_fk1 FOREIGN KEY (service)
-    REFERENCES reputation_service (id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT reputation_data_fk2 FOREIGN KEY (indicator_type)
-    REFERENCES reputation_indicator (id)
-    ON DELETE CASCADE ON UPDATE CASCADE, 
-  PRIMARY KEY (id)
-);
