@@ -82,3 +82,22 @@ CREATE TABLE IF NOT EXISTS reputation_data (
 
 
 ------------------------
+
+delete from reputation_data where id in (
+  select id 
+  from 
+    (select id, 
+      row_number() over (partition by indicator_type, indicator order by id) as row_num 
+    from reputation_data) a
+  where a.row_num > 1
+  );
+
+
+
+select setval('reputation_data_id_seq', (select COUNT(*) from reputation_data), true);
+
+
+
+select setval('reputation_data_id_seq', 1, false);
+select setval('reputation_info_id_seq', 1, false);
+ 

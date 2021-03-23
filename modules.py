@@ -15,7 +15,7 @@ DateFormat = '%Y-%m-%d %H:%M:%S'
 class GetApi:
     otx = OTXv2(
         'd208825926256517b037657addb90894cf4b663c8ba9651a67d44493334a94a4')
-    dbs = otx.getall(limit=1, max_page=10)
+    dbs = otx.getall(limit=1, max_page=20)
 
 
 class ConnectionDB:
@@ -79,8 +79,13 @@ class AuditLog:
 class Duplication:
     def duplication_remove():
         ConnectionDB.cur.execute(
-            "DELETE FROM reputation_data WHERE id in (SELECT id FROM (SELECT id, row_number() OVER (PARTITION BY indicator ORDER BY id) as row_num FROM reputation_data) a WHERE a.row_num > 1);"
+            "DELETE FROM reputation_data WHERE id in (SELECT id FROM (SELECT id, row_number() OVER (PARTITION BY indicator ORDER BY id) as row_num FROM reputation_data) as a WHERE a.row_num > 1);"
         )
+        ConnectionDB.cur.execute(
+            "DELETE FROM reputation_info WHERE id in (SELECT id FROM (SELECT id, row_number() OVER (PARTITION BY title ORDER BY id) as row_num FROM reputation_info) as a WHERE a.row_num > 1);"
+        )        
+        ConnectionDB.cur.execute("select setval('reputation_data_id_seq', (select COUNT(*) from reputation_data), true)");
+        ConnectionDB.cur.execute("select setval('reputation_info_id_seq', (select COUNT(*) from reputation_info), true)");
 
         return ConnectionDB.cur.fetchone
 
@@ -97,3 +102,10 @@ class IndicatorService:
             "SELECT id FROM reputation_indicator WHERE indicator_name = %s",
             (name, ))
         return ConnectionDB.cur.fetchone()
+
+    def idx_exists_info(id):
+        if(ConnectionDB.cur.execute("SELECT id FROM reputation_info WHERE id = %s", (id, ))):
+            print('ㅎㅇ')
+            return id + 1
+        else:
+            return ConnectionDB.cur.fetchone()

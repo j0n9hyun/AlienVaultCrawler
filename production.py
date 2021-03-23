@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from modules import *
 
-# AuditLog.audit_log_start()
-# Service.EnableService()
+AuditLog.audit_log_start()
+Service.EnableService()
 for idx, i in enumerate(tqdm((GetApi.dbs), ncols=100), 1):
     tid_index = idx
     # print('idx: %s' % tid_index)
@@ -12,6 +12,7 @@ for idx, i in enumerate(tqdm((GetApi.dbs), ncols=100), 1):
     cprint('Revision: %s' % i['revision'], 'cyan')
     cprint('Tags: %s\033[0m' % i['tags'], 'blue')
     cprint('-' * 100, 'magenta')
+    # IndicatorService.idx_exists_info(tid_index)
     ConnectionDB.cur.execute("INSERT INTO reputation_info (id, tid, title, description) values (default, %s, %s, %s)", (i['id'], i['name'], i['description']))
     ConnectionDB.conn.commit()    
 
@@ -23,7 +24,7 @@ for idx, i in enumerate(tqdm((GetApi.dbs), ncols=100), 1):
             else:
                 cprint('새로운 타입 발견', 'white', 'on_red')
                 ConnectionDB.cur.execute(
-                    "INSERT INTO reputation_indicator (id, indicatro_name) values (default, %s)",
+                    "INSERT INTO reputation_indicator (id, indicator_name) values (default, %s)",
                     (j['type'], ))
                 ConnectionDB.conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -43,5 +44,5 @@ for idx, i in enumerate(tqdm((GetApi.dbs), ncols=100), 1):
                  j['type']), j['indicator'], Date, j['created']))
         ConnectionDB.conn.commit()
         Duplication.duplication_remove()    
-    AuditLog.audit_log_end()
-    cprint('작업 종료', 'yellow')
+AuditLog.audit_log_end()
+cprint('작업 종료', 'yellow')
